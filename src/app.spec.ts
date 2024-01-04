@@ -1,4 +1,4 @@
-import { Test, TestingModule } from '@nestjs/testing'; 
+import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AppModule } from './app.module';
@@ -20,19 +20,19 @@ describe('AppController', () => {
   it('should return hello message', () => {
     const hello = 'Hello World';
     jest.spyOn(service, 'getHello').mockReturnValue(hello);
-    
+
     expect(controller.getHello().result).toBe(hello);
   });
 
   it('should return 200 status code', () => {
     const result = controller.getHello();
-    
-    expect(result.code).toBe(200); 
+
+    expect(result.code).toBe(200);
   });
 
   it('should return "nice" message', () => {
     const result = controller.getHello();
-    
+
     expect(result.message).toBe('nice');
   });
 });
