@@ -8,12 +8,3 @@ git clone https://github.com/JuanJFarina/TerpsichoreServer.git
 cd TerpsichoreServer
 npm install
 ```
-
-## Setup Husky pre-commit
-
-```
-npx husky-init
-npm install
-```
-
-This will initialize Husky and set up a pre-commit hook that runs linting.
