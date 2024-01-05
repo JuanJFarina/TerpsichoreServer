@@ -9,8 +9,8 @@ export default registerAs('database', () => ({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
-  entities: [join(__dirname, '../../modules/**', '*.entity.{ts,js}')],
-  synchronize: JSON.parse(process.env.POSTGRES_SYNC),
+  entities: [join(__dirname, '../../database/**', '*.entity.{ts,js}')],
+  synchronize: true,
   logging: false,
   dropSchema: false,
 }));
