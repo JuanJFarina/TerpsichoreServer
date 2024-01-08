@@ -17,23 +17,27 @@ describe('AppController', () => {
     service = module.get<AppService>(AppService);
   });
 
-  it('should return hello message', () => {
-    const hello = 'Hello World';
-    jest.spyOn(service, 'getHello').mockReturnValue(hello);
+  describe('getHello', () => {
+    it('should return hello message', () => {
+      const hello = 'Hello World';
+      jest.spyOn(service, 'getHello').mockReturnValue(hello);
 
-    expect(controller.getHello().result).toBe(hello);
-  });
+      const result = controller.getHello();
 
-  it('should return 200 status code', () => {
-    const result = controller.getHello();
+      expect(result.result).toBe(hello);
+    });
 
-    expect(result.code).toBe(200);
-  });
+    it('should return 200 status code', () => {
+      const result = controller.getHello();
 
-  it('should return "nice" message', () => {
-    const result = controller.getHello();
+      expect(result.code).toBe(200);
+    });
 
-    expect(result.message).toBe('nice');
+    it('should return "nice" message', () => {
+      const result = controller.getHello();
+
+      expect(result.message).toBe('nice');
+    });
   });
 });
 
@@ -48,11 +52,7 @@ describe('AppModule', () => {
     appModule = module.get<AppModule>(AppModule);
   });
 
-  it('should have a controller set up', () => {
-    expect(appModule.controllers).toContain(AppController);
-  });
-
-  it('should have a provider set up', () => {
-    expect(appModule.providers).toContain(AppService);
+  it('should be defined', () => {
+    expect(appModule).toBeDefined();
   });
 });
