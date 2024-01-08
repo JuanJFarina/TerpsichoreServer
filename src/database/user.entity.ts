@@ -5,10 +5,10 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  ManyToMany
+  ManyToMany,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { CourseClass } from './classes.entity';
+import { CourseClass } from './class.entity';
 
 @Entity({ name: 'user', schema: 'public' })
 export class User {
@@ -90,7 +90,7 @@ export class User {
 
   @ManyToMany(() => CourseClass, (clase) => clase.id)
   clase: CourseClass[];
-  
+
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);
   }

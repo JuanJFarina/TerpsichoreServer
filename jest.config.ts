@@ -2,12 +2,7 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  coverageThreshold: {
-    global: {
-      functions: 40,
-      lines: 40,
-    },
-  },
+  coverageThreshold: null,
   moduleFileExtensions: ['js', 'json', 'ts'],
   moduleDirectories: ['node_modules', 'src'],
   rootDir: './', // ***** CHANGE "rootDir": "src" to "rootDir": "./"

@@ -1,5 +1,9 @@
 import { registerAs } from '@nestjs/config';
-import { join } from 'path';
+import { User } from 'src/database/user.entity';
+import { CourseClass } from 'src/database/class.entity';
+import { Course } from 'src/database/course.entity';
+import { Category } from 'src/database/category.entity';
+import { Progress_Tracking } from 'src/database/class_progress_tracking.entity';
 
 export default registerAs('database', () => ({
   type: process.env.POSTGRES_TYPE,
@@ -9,7 +13,7 @@ export default registerAs('database', () => ({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
-  entities: [join(__dirname, '../../database/**', '*.entity.{ts,js}')],
+  entities: [User, CourseClass, Course, Progress_Tracking, Category],
   synchronize: true,
   logging: false,
   dropSchema: false,
