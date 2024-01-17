@@ -8,12 +8,12 @@ export class Category {
   id: string;
 
   @Column('character varying', {
-    name: 'category',
+    name: 'name',
     length: 50,
     nullable: false,
     unique: true,
   })
-  category: string;
+  name: string;
 
   @ManyToMany(() => Course, (course) => course.categories)
   courses: Course[];

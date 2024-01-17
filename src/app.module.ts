@@ -6,6 +6,9 @@ import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './modules/user/user.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './modules/auth/auth.module';
+import { CourseModule } from './modules/courses/course.module';
+import { ClassModule } from './modules/classes/class.module';
+import { CategoryModule } from './modules/categories/category.module';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { AuthModule } from './modules/auth/auth.module';
     DataBaseConfigModule,
     UserModule,
     AuthModule,
+    CourseModule,
+    ClassModule,
+    CategoryModule
   ],
   controllers: [AppController],
   providers: [AppService],
