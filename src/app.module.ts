@@ -25,7 +25,7 @@ import { CategoryModule } from './modules/categories/category.module';
     AuthModule,
     CourseModule,
     ClassModule,
-    CategoryModule
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

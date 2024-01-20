@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CourseClass } from 'src/database/class.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([CourseClass])],
-    controllers: [ClassController],
-    providers: [ClassService],
+  imports: [TypeOrmModule.forFeature([CourseClass])],
+  controllers: [ClassController],
+  providers: [ClassService],
 })
-export class ClassModule {};
+export class ClassModule {}

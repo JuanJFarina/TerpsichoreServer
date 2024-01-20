@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsArray } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CourseDto {
+export class UpdateCourseDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -16,12 +16,6 @@ export class CourseDto {
   @IsString()
   @IsNotEmpty()
   instructor: string;
-
-  @ApiProperty({ type: [String] })
-  @IsArray()
-  @IsNotEmpty({ each: true })
-  @IsString({ each: true })
-  categories: string[];
 }
 
-export default CourseDto;
+export default UpdateCourseDto;

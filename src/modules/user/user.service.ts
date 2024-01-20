@@ -26,7 +26,7 @@ export class UserService {
     }
 
     const password = await bcrypt.hash(payload.password, 10);
-    const createdUser = this.userRepository.create({
+    const createdUser = await this.userRepository.save({
       ...payload,
       password,
     });
@@ -45,7 +45,6 @@ export class UserService {
       }),
     };
 
-    await this.userRepository.save(createdUser);
     return {
       profile: createdUser,
       credential,

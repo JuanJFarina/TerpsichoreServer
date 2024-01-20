@@ -1,6 +1,14 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 
 import { Progress_Tracking } from './class_progress_tracking.entity';
+import { Course } from './course.entity';
 
 @Entity({ name: 'class', schema: 'public' })
 export class CourseClass {
@@ -27,6 +35,10 @@ export class CourseClass {
     nullable: false,
   })
   description: string;
+
+  @ManyToOne(() => Course, (course) => course.classes)
+  @JoinColumn({ name: 'course_id' })
+  course: Course;
 
   @OneToMany(() => Progress_Tracking, (userClasses) => userClasses.clase)
   userClasses: Progress_Tracking[];

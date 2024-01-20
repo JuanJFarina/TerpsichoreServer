@@ -3,7 +3,7 @@ import {
   Column,
   PrimaryGeneratedColumn,
   JoinTable,
-  ManyToOne,
+  OneToMany,
   ManyToMany,
 } from 'typeorm';
 
@@ -35,13 +35,15 @@ export class Course {
     length: 50,
     nullable: true,
   })
-  name: string;
+  instructor: string;
 
-  @ManyToOne(() => CourseClass, (course) => course.id)
-  courses: string;
+  @OneToMany(() => CourseClass, (courseClass) => courseClass.course)
+  classes: CourseClass[];
 
   @ManyToMany(() => Category, (category) => category.courses)
-  @JoinTable()
+  @JoinTable({
+    name: 'course_category',
+  })
   categories: Category[];
 
   constructor(partial: Partial<Course>) {

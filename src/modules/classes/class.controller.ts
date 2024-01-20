@@ -4,10 +4,8 @@ import { ApiTags } from '@nestjs/swagger';
 @ApiTags('clases')
 @Controller('class')
 export class ClassController {
-    constructor(){}
+  constructor() {}
 
-    @Get('/')
-    getAllClass(){
-
-    } 
+  @Get('/')
+  getAllClass() {}
 }

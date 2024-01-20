@@ -4,12 +4,14 @@ import {
   JoinColumn,
   Column,
   PrimaryGeneratedColumn,
+  Unique,
 } from 'typeorm';
 
 import { CourseClass } from './class.entity';
 import { User } from './user.entity';
 
 @Entity({ name: 'progress_tracking', schema: 'public' })
+@Unique(['user', 'clase']) // Asegura que no haya registros duplicados para un usuario y una clase
 export class Progress_Tracking {
   @PrimaryGeneratedColumn('uuid')
   id: string;
