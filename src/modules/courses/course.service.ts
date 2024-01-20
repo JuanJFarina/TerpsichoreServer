@@ -69,12 +69,25 @@ export class CourseService {
           'User alredy enrolled in this course',
           HttpStatus.BAD_REQUEST,
         );
-
       await this.courseRepository.query(`
       INSERT INTO progress_tracking (user_id, class_id, completed)
       SELECT '${userId}', id, FALSE
       FROM "class"
       WHERE course_id = '${courseId}';
+      `);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+  async droppOutCourse(userId: string, courseId: string): Promise<void> {
+    try {
+      await this.courseRepository.query(`
+        DELETE FROM progress_tracking
+        WHERE user_id = '${userId}' AND class_id IN (
+          SELECT id
+          FROM "class"
+          WHERE course_id = '${courseId}'
+        );
       `);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
@@ -95,7 +108,70 @@ export class CourseService {
       `);
   }
 
+  async getCourseOfUser(userId: string): Promise<any[]> {
+    return await this.courseRepository.query(
+      `
+      SELECT
+        cs.*,
+        COALESCE(
+          TRUNC(
+            (COUNT(pt.id) FILTER (WHERE pt.completed = true) * 100.0) / COUNT(pt.id),
+            0
+          ),
+          0
+        ) AS progress,
+        COUNT(pt.id) AS total_classes,
+        COUNT(pt.id) FILTER (WHERE pt.completed = true) AS total_completed
+      FROM
+        "course" AS cs
+        LEFT JOIN "class" AS cl ON cs.id = cl.course_id
+        LEFT JOIN progress_tracking AS pt ON cl.id = pt.class_id
+      WHERE
+        pt.user_id = $1
+      GROUP BY
+        cs.id;
+    `,
+      [userId],
+    );
+  }
+
   async remove(id: string): Promise<void> {
     await this.courseRepository.delete(id);
+  }
+
+  async addCategoriesToCourse(courseId: string, categoriesId: string[]) {
+    try {
+      const categoriesValues = categoriesId
+        .map((categoryId) => `('${courseId}', '${categoryId}')`)
+        .join(',');
+
+      await this.courseRepository.query(`
+        INSERT INTO course_category ("courseId", "categoryId")
+        VALUES ${categoriesValues};
+      `);
+    } catch (error) {
+      throw new HttpException(
+        'El curso ya tiene una de las categorias seleccioandas',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async deleteCategoriesToCourse(courseId: string, categoriesId: string[]) {
+    try {
+      const categoriesValues = categoriesId
+        .map((categoryId) => `('${courseId}', '${categoryId}')`)
+        .join(',');
+
+      await this.courseRepository.query(`
+        DELETE FROM course_category
+        WHERE ("courseId", "categoryId") IN (${categoriesValues});
+      `);
+    } catch (error) {
+      throw new HttpException(
+        'Una de las categorias no pertenece al curso',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

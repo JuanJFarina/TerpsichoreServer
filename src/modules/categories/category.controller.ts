@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { Category } from 'src/database/category.entity';
 import { CategoryDto } from './dto/category-dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GenericResponse } from 'src/common/dto/generic-response';
 import { CategoryService } from './category.service';
 
@@ -22,8 +22,19 @@ export class CategoryController {
 
   @ApiOperation({ summary: 'Obtener todas las categorias' })
   @Get()
-  async findAll(): Promise<Category[]> {
-    return this.categoryService.findAll();
+  async findAll(): Promise<GenericResponse> {
+    try {
+      const result = await this.categoryService.findAll();
+      return new GenericResponse({
+        result,
+        code: 200,
+      });
+    } catch (error) {
+      throw new HttpException(
+        error?.message || 'Internal server error',
+        error?.status || HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @ApiOperation({ summary: 'Obtener categoria por ID' })
@@ -50,7 +61,7 @@ export class CategoryController {
     }
   }
 
-  @ApiOperation({ summary: 'Editar un curso' })
+  @ApiOperation({ summary: 'Editar un categoria' })
   @Put(':id')
   update(@Param('id') id: string, @Body() categoryDto: CategoryDto) {
     try {

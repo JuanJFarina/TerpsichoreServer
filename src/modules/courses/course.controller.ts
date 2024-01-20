@@ -16,35 +16,28 @@ import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { GenericResponse } from 'src/common/dto/generic-response';
 import { CourseDto } from './dto/course-dto';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
+import AddCategoriesDto from './dto/add-categories.dto';
 
 /*
 TODO: 
-1. crear un endpoint para agregarle categorias a un curso.
-- este debe de ser un PUT que reciba como body un array de UID de categoria.
-- crear la relacion entre esas categorias y el curso.
 
-2. crear un endpoint para eliminar categorias de un curso.
-- este debe de ser un PUT que reciba como body un array de UID de categoria.
-- eliminar la relacion entre esas categorias y el curso.
-
-
-3. crear un endpoint para buscar cursos por categoria.
+1. crear un endpoint para buscar cursos por categoria.
 - este debe de ser un GET que reciba como query un UID de categoria.
 - buscar los cursos que tengan esa categoria.
 
-4. crear un endpoint para buscar cursos por nombre. 
+2. crear un endpoint para buscar cursos por nombre. 
 - este debe de ser un GET que reciba como query un nombre.
 - buscar los cursos que tengan ese nombre (debe de ser por INCLUDE o LIKE).
 - se pude usar una busqueda por palabra clave tambien.
 
-5. crear una paginacion en todos los GET mencionados.
+3. crear una paginacion en todos los GET mencionados.
 
-6. crear un endpoint para anotarme a un curso.
-- este debe de ser un PUT que reciba como body un UID de curso.
-- este endpoint debe de  buscar todas las clases de el curso.
-- crear un tracking con todas las clases
+4. crear un endpoint para obtener las clases de un curso.
 
-7. crear un endpoint para obtener mis cursos en el clual me anote y ver mi progreso.
+5. ir al modulo de clases y crear un endpoint para crear clases en el curso
+
+6. completar el crud de clases 
+
 */
 
 @ApiTags('Course')
@@ -71,7 +64,7 @@ export class CourseController {
   }
 
   @ApiOperation({ summary: 'Obtener curso por ID' })
-  @Get(':id')
+  @Get('by-id/:id')
   async findOne(@Param('id') id: string): Promise<GenericResponse> {
     try {
       const result = await this.courseService.findOne(id);
@@ -124,8 +117,26 @@ export class CourseController {
     }
   }
 
+  @ApiOperation({ summary: 'Eliminar un curso' })
+  @Delete(':id')
+  async remove(@Param('id') id: string): Promise<GenericResponse> {
+    try {
+      const result = await this.courseService.remove(id);
+      return new GenericResponse({
+        code: 200,
+        message: 'Remove successful',
+        result,
+      });
+    } catch (ex: unknown) {
+      throw new HttpException(
+        ex instanceof Error ? ex.message : 'Internal server error',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
   @ApiBearerAuth()
-  @ApiOperation({ summary: 'Editar un curso' })
+  @ApiOperation({ summary: 'Inscribirme un curso' })
   @UseGuards(JwtAuthGuard)
   @Put('enroll/:courseId')
   async enrollUser(@Param('courseId') courseId: string, @Req() req) {
@@ -141,20 +152,64 @@ export class CourseController {
     }
   }
 
-  @ApiOperation({ summary: 'Eliminar un curso' })
-  @Delete(':id')
-  async remove(@Param('id') id: string): Promise<GenericResponse> {
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Inscribirme un curso' })
+  @UseGuards(JwtAuthGuard)
+  @Delete('dropp-out/:courseId')
+  async droppOutCourse(@Param('courseId') courseId: string, @Req() req) {
     try {
-      const result = this.courseService.remove(id);
+      const result = await this.courseService.droppOutCourse(
+        req.user.id,
+        courseId,
+      );
       return new GenericResponse({
-        code: 200,
-        message: 'Remove successful',
+        code: 202,
+        message: 'enroll successful',
         result,
       });
-    } catch (ex: unknown) {
+    } catch (ex: any) {
+      throw new HttpException(ex.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'obtener mis cursos' })
+  @UseGuards(JwtAuthGuard)
+  @Get('my-courses')
+  async getCourseOfUser(@Req() req) {
+    try {
+      const result = await this.courseService.getCourseOfUser(req.user.id);
+      return new GenericResponse({
+        code: 200,
+        message: 'enroll successful',
+        result,
+      });
+    } catch (ex: any) {
+      throw new HttpException(ex.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  @ApiOperation({ summary: 'agregar categorias a un curso' })
+  @Put('add-categories/:courseId')
+  async addCategory(
+    @Param('courseId') courseId: string,
+    @Body() addCategoriesDto: AddCategoriesDto,
+  ) {
+    try {
+      const result = await this.courseService.addCategoriesToCourse(
+        courseId,
+        addCategoriesDto.categories,
+      );
+
+      return new GenericResponse({
+        result,
+        code: 200,
+        message: 'added category successfully',
+      });
+    } catch (ex: any) {
       throw new HttpException(
-        ex instanceof Error ? ex.message : 'Internal server error',
-        HttpStatus.BAD_REQUEST,
+        ex.message || 'internal error',
+        ex.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
