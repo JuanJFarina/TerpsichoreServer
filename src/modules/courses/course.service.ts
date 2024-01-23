@@ -6,6 +6,7 @@ import { CourseDto } from './dto/course-dto';
 import { Category } from 'src/database/category.entity';
 import UpdateCourseDto from './dto/update-course.dto';
 import { Progress_Tracking } from 'src/database/class_progress_tracking.entity';
+import { CourseClass } from 'src/database/class.entity';
 
 @Injectable()
 export class CourseService {
@@ -14,7 +15,7 @@ export class CourseService {
     private readonly courseRepository: Repository<Course>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-  ) {}
+  ) { }
 
   async findAll(): Promise<Course[]> {
     return this.courseRepository.find();
@@ -46,7 +47,7 @@ export class CourseService {
 
       return await this.courseRepository.save(course);
     } catch (error) {
-      throw new HttpException('Error of create course', HttpStatus.BAD_REQUEST);
+      throw new HttpException('Error at creating course', HttpStatus.BAD_REQUEST);
     }
   }
 
@@ -171,6 +172,55 @@ export class CourseService {
       throw new HttpException(
         'Una de las categorias no pertenece al curso',
         HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async findByCategory(categoryId: string) : Promise<Course[]> {
+    try {
+      const courses = await this.courseRepository.query(`
+      SELECT course.*
+      FROM course
+      INNER JOIN course_category ON course.id = course_category."courseId"
+      WHERE course_category."categoryId" = $1
+      `, [categoryId]);
+      return courses;
+    } catch (error) {
+      throw new HttpException(
+        'Error al filtrar cursos por categoria',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
+  async findByName(name: string) : Promise<Course[]>{
+    try{
+      const courses = await this.courseRepository.query(`
+      SELECT course.*
+      FROM course
+      WHERE course.title ILIKE $1
+      `, [`%${name}%`])
+      return courses;
+    } catch(error){
+      throw new HttpException(
+        'Error al filtrar los cursos',
+        HttpStatus.BAD_REQUEST
+      );
+    }
+  }
+
+  async findClassByCourseId(courseId: string): Promise<CourseClass[]>{
+    try{
+      const classes = await this.courseRepository.query(`
+        SELECT class.*
+        FROM class
+        WHERE class."courseId" = $1
+      `,[courseId]);
+      return classes;
+    }catch(error){
+      throw new HttpException(
+        'Error al filtrar clases',
+        HttpStatus.BAD_REQUEST
       );
     }
   }
