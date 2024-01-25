@@ -13,7 +13,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { CourseService } from './course.service';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
 import { GenericResponse } from 'src/common/dto/generic-response';
 import { CourseDto } from './dto/course-dto';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
@@ -204,10 +209,10 @@ export class CourseController {
     }
   }
 
-  @ApiOperation({summary:'Filtrar cursos por categoria'})
+  @ApiOperation({ summary: 'Filtrar cursos por categoria' })
   @Get('by-Category/:categoryId')
-  async findByCategory(@Param('categoryId') categoryId: string){
-    try{
+  async findByCategory(@Param('categoryId') categoryId: string) {
+    try {
       const result = await this.courseService.findByCategory(categoryId);
       return new GenericResponse({
         result,
@@ -221,35 +226,36 @@ export class CourseController {
     }
   }
 
-  @ApiOperation({summary: 'Obtener curso por nombre'})
+  @ApiOperation({ summary: 'Obtener curso por nombre' })
+  @ApiQuery({ name: 'name', required: true })
   @Get('by-name')
-  async findByName(@Query('name') name: string){
-    try{
-      const result = await this.courseService.findByName(name)
+  async findByName(@Query('name') name: string) {
+    try {
+      const result = await this.courseService.findByName(name);
       return new GenericResponse({
         result,
         code: 200,
       });
-    }catch(ex: unknown){
-      ex instanceof Error ? ex.message: 'Internal server error', 
-      HttpStatus.BAD_REQUEST
-    };
+    } catch (ex: unknown) {
+      ex instanceof Error ? ex.message : 'Internal server error',
+        HttpStatus.BAD_REQUEST;
+    }
   }
 
   @ApiOperation({ summary: 'Obtener las clases de un curso por Id' })
-@Get(':courseId/classes')
-async findClasesByCursoId(@Param('cursoId') courseId: string) {
-  try {
-    const result = await this.courseService.findClassByCourseId(courseId);
-    return new GenericResponse({
-      result,
-      code: 200,
-    });
-  } catch (ex: unknown) {
-    throw new HttpException(
-      ex instanceof Error ? ex.message : 'Internal server error',
-      HttpStatus.BAD_REQUEST,
-    );
+  @Get(':courseId/classes')
+  async findClasesByCursoId(@Param('cursoId') courseId: string) {
+    try {
+      const result = await this.courseService.findClassByCourseId(courseId);
+      return new GenericResponse({
+        result,
+        code: 200,
+      });
+    } catch (ex: unknown) {
+      throw new HttpException(
+        ex instanceof Error ? ex.message : 'Internal server error',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
-}
 }

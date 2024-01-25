@@ -15,7 +15,7 @@ export class CourseService {
     private readonly courseRepository: Repository<Course>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-  ) { }
+  ) {}
 
   async findAll(): Promise<Course[]> {
     return this.courseRepository.find();
@@ -47,7 +47,10 @@ export class CourseService {
 
       return await this.courseRepository.save(course);
     } catch (error) {
-      throw new HttpException('Error at creating course', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Error at creating course',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
@@ -176,51 +179,60 @@ export class CourseService {
     }
   }
 
-  async findByCategory(categoryId: string) : Promise<Course[]> {
+  async findByCategory(categoryId: string): Promise<Course[]> {
     try {
-      const courses = await this.courseRepository.query(`
+      const courses = await this.courseRepository.query(
+        `
       SELECT course.*
       FROM course
       INNER JOIN course_category ON course.id = course_category."courseId"
       WHERE course_category."categoryId" = $1
-      `, [categoryId]);
+      `,
+        [categoryId],
+      );
       return courses;
     } catch (error) {
       throw new HttpException(
         'Error al filtrar cursos por categoria',
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
 
-  async findByName(name: string) : Promise<Course[]>{
-    try{
-      const courses = await this.courseRepository.query(`
+  async findByName(name: string): Promise<Course[]> {
+    try {
+      const courses = await this.courseRepository.query(
+        `
       SELECT course.*
       FROM course
       WHERE course.title ILIKE $1
-      `, [`%${name}%`])
+      `,
+        [`%${name}%`],
+      );
       return courses;
-    } catch(error){
+    } catch (error) {
       throw new HttpException(
         'Error al filtrar los cursos',
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
 
-  async findClassByCourseId(courseId: string): Promise<CourseClass[]>{
-    try{
-      const classes = await this.courseRepository.query(`
+  async findClassByCourseId(courseId: string): Promise<CourseClass[]> {
+    try {
+      const classes = await this.courseRepository.query(
+        `
         SELECT class.*
         FROM class
         WHERE class."courseId" = $1
-      `,[courseId]);
+      `,
+        [courseId],
+      );
       return classes;
-    }catch(error){
+    } catch (error) {
       throw new HttpException(
         'Error al filtrar clases',
-        HttpStatus.BAD_REQUEST
+        HttpStatus.BAD_REQUEST,
       );
     }
   }
