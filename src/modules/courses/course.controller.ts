@@ -50,7 +50,7 @@ export class CourseController {
         message: 'Courses retrieved successfully',
         result,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error?.message || 'Internal Server Error',
         error?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -68,7 +68,7 @@ export class CourseController {
         message: 'Courses retrieved successfully',
         result,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error?.message || 'Internal Server Error',
         error?.status || HttpStatus.INTERNAL_SERVER_ERROR,
@@ -86,7 +86,7 @@ export class CourseController {
         message: 'Creation succesfull',
         result,
       });
-    } catch (ex) {
+    } catch (ex: any) {
       throw new HttpException(
         ex.message || 'internal error',
         ex.status || HttpStatus.INTERNAL_SERVER_ERROR,

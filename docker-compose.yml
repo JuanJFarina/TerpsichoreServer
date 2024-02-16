@@ -1,0 +1,19 @@
+version: '3'
+services:
+  # Servicio para tu aplicación NestJS
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - redis
+    env_file:
+      - .env
+
+  # Servicio para Redis
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"

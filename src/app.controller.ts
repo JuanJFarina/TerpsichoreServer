@@ -8,9 +8,10 @@ export class AppController {
 
   @Get()
   getHello(): GenericResponse {
+    const result = this.appService.getHello();
     return new GenericResponse({
-      result: this.appService.getHello(),
       code: 200,
+      result,
       message: 'nice',
     });
   }

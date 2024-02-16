@@ -9,6 +9,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CourseModule } from './modules/courses/course.module';
 import { ClassModule } from './modules/classes/class.module';
 import { CategoryModule } from './modules/categories/category.module';
+import { QueueModule } from './common/services/queue/queue.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { CategoryModule } from './modules/categories/category.module';
       signOptions: { expiresIn: process.env.JWT_EXPIRATION_TIME },
       global: true,
     }),
+    QueueModule,
     DataBaseConfigModule,
     UserModule,
     AuthModule,

@@ -79,7 +79,7 @@ export class CourseService {
       FROM "class"
       WHERE course_id = '${courseId}';
       `);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
@@ -93,7 +93,7 @@ export class CourseService {
           WHERE course_id = '${courseId}'
         );
       `);
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }

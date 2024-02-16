@@ -24,7 +24,7 @@ export class UserController {
         message: 'Registration successful',
         result,
       });
-    } catch (ex) {
+    } catch (ex: any) {
       throw new HttpException(
         ex.message || 'internal Server Error',
         ex.status || HttpStatus.INTERNAL_SERVER_ERROR,

@@ -29,7 +29,7 @@ export class CategoryController {
         result,
         code: 200,
       });
-    } catch (error) {
+    } catch (error: any) {
       throw new HttpException(
         error?.message || 'Internal server error',
         error?.status || HttpStatus.INTERNAL_SERVER_ERROR,
