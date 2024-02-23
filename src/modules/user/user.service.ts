@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/database/user.entity';
 import { Repository } from 'typeorm';
 import { RegisterUserDto } from './dto/register-user-dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { TokenTypes } from 'src/common/enums/token-types.enum';
 import { JwtService } from '@nestjs/jwt';
 @Injectable()

@@ -5,7 +5,7 @@ import { TokenTypes } from 'src/common/enums/token-types.enum';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { JwtPayload } from 'src/common/interface/jwt-payload.interface';
 
 @Injectable()
