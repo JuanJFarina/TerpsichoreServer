@@ -9,6 +9,7 @@ import {
 
 import { Progress_Tracking } from './class_progress_tracking.entity';
 import { Course } from './course.entity';
+import { Content } from './content.entity';
 
 @Entity({ name: 'class', schema: 'public' })
 export class CourseClass {
@@ -39,6 +40,9 @@ export class CourseClass {
   @ManyToOne(() => Course, (course) => course.classes)
   @JoinColumn({ name: 'course_id' })
   course: Course;
+
+  @OneToMany(() => Content, (content) => content.course_Class)
+  contents: Content[];
 
   @OneToMany(() => Progress_Tracking, (userClasses) => userClasses.clase)
   userClasses: Progress_Tracking[];

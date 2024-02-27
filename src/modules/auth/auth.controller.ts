@@ -8,6 +8,7 @@ import {
   UseGuards,
   UseInterceptors,
   Req,
+  Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -17,17 +18,20 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
+import { Request, Response } from 'express';
 import { LoginDto } from './dto/login-dto';
 import { GenericResponse } from 'src/common/dto/generic-response';
 import { LocalAuthGuard } from './guard/local-auth.guard';
 import { JwtAuthGuard } from 'src/common/guard/jwt-auth.guard';
 import { JwtPayload } from 'src/common/interface/jwt-payload.interface';
 import { User } from 'src/database/user.entity';
+import { UserService } from '../user/user.service';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService, private readonly userService: UserService) {}
 
   @ApiOperation({
     summary:
@@ -54,6 +58,21 @@ export class AuthController {
     } catch (ex: any) {
       throw new HttpException(ex.message, HttpStatus.BAD_REQUEST);
     }
+  }
+
+  @Get('google')
+  @UseGuards(AuthGuard('google'))
+  async googleLogin(): Promise<any> {
+    return HttpStatus.OK;
+  }
+  @Get('google/callback')
+  @UseGuards(AuthGuard('google'))
+  async googleLoginRedirect(
+    @Req() req: Request & { user?: any },
+    @Res() res: Response,
+  ): Promise<any> {
+    const token = await this.userService.authGoogle(req.user);
+    return res.redirect(`${process.env.URL_FRONT}/login?token=${token}`)
   }
 
   @Get('profile')

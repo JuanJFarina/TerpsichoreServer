@@ -10,6 +10,7 @@ import { CourseModule } from './modules/courses/course.module';
 import { ClassModule } from './modules/classes/class.module';
 import { CategoryModule } from './modules/categories/category.module';
 import { QueueModule } from './common/services/queue/queue.module';
+import { ContentModule } from './modules/content/content.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { QueueModule } from './common/services/queue/queue.module';
     CourseModule,
     ClassModule,
     CategoryModule,
+    ContentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

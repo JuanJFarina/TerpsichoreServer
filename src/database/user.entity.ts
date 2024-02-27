@@ -51,6 +51,13 @@ export class User {
   })
   phone: string;
 
+  @Column('character varying', {
+    name: 'picture_url',
+    length: 200,
+    nullable: true,
+  })
+  picture_url: string;
+
   @Column('boolean', {
     name: 'verified',
     default: false,

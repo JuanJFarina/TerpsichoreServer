@@ -3,6 +3,7 @@ import { User } from 'src/database/user.entity';
 import { CourseClass } from 'src/database/class.entity';
 import { Course } from 'src/database/course.entity';
 import { Category } from 'src/database/category.entity';
+import { Content } from 'src/database/content.entity';
 import { Progress_Tracking } from 'src/database/class_progress_tracking.entity';
 
 export default registerAs('database', () => ({
@@ -13,7 +14,7 @@ export default registerAs('database', () => ({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_DATABASE,
-  entities: [User, CourseClass, Course, Progress_Tracking, Category],
+  entities: [User, CourseClass, Course, Progress_Tracking, Category, Content],
   synchronize: true,
   logging: false,
   dropSchema: false,

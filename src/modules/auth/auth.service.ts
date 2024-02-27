@@ -32,8 +32,7 @@ export class AuthService {
       refresh_token: this.generateToken(user, TokenTypes.REFRESH, {
         expiresIn: this.config.get('JWT_EXPIRATION_TIME_REFRESH'),
       }),
-      id: user.id,
-      email: user.email,
+    
     };
   }
 
