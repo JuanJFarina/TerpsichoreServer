@@ -21,4 +21,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["dumb-init","node", "dist/main.js"]
+CMD ["dumb-init","node", "dist/src/main.js"]
